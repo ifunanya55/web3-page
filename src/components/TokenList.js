@@ -1,5 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
+import useTokens from "../utils/useTokens";
 
 //MUI stuff
 import Button from "@material-ui/core/Button";
@@ -34,45 +35,57 @@ const styles = {
     right: 10,
     top: 3,
   },
+  tokenImg: {
+    width: 24,
+    height: 24,
+    borderRadius: 24,
+    boxShadow: "rgb(0 0 0 / 8%) 0px 6px 10px",
+    backgroundColor: "rgb(255, 255, 255)",
+  },
 };
 
-const TokenList = ({ classes, open, handleClose }) => (
-  <Dialog
-    onClose={handleClose}
-    aria-labelledby="simple-dialog-title"
-    open={open}
-    className={classes.dialog}
-  >
-    <DialogTitle className={classes.dialogTitle}>Select Token </DialogTitle>
-    <List>
-      <ListItem button>
-        <ListItemIcon>
-          <MonetizationOnIcon />
-        </ListItemIcon>
-        <div className={classes.listItemText}>
-          <Typography variant="h6">ETH 80</Typography>
-          <Typography variant="h6">$ 333</Typography>{" "}
-        </div>
-      </ListItem>
-      <ListItem button>
-        <ListItemIcon>
-          <MonetizationOnIcon />
-        </ListItemIcon>
-        <div className={classes.listItemText}>
-          <Typography variant="h6">ETH 80</Typography>
-          <Typography variant="h6">$ 333</Typography>{" "}
-        </div>
-      </ListItem>
-    </List>
-    <IconButton
-      onClick={handleClose}
-      aria-label="close"
-      className={classes.closeBtn}
+const TokenList = ({ classes, open, handleClose }) => {
+  const tokens = useTokens();
+  const tokensMarkup = tokens.map((token) => (
+    <ListItem button key={token.address}>
+      <ListItemIcon>
+        <img
+          alt="token_logo"
+          src={token.logoURI}
+          className={classes.tokenImg}
+        />
+      </ListItemIcon>
+      <div className={classes.listItemText}>
+        <Typography variant="h6">
+          {token.symbol} {token.balance ? token.balance : ""}
+        </Typography>
+        <Typography variant="h6">
+          ${" "}
+          {token.balance && token.price ? token.price.usd * token.balance : ""}
+        </Typography>{" "}
+      </div>
+    </ListItem>
+  ));
+
+  return (
+    <Dialog
+      onClose={handleClose}
+      aria-labelledby="simple-dialog-title"
+      open={open}
+      className={classes.dialog}
     >
-      <CloseIcon />
-    </IconButton>
-  </Dialog>
-);
+      <DialogTitle className={classes.dialogTitle}>Select Token </DialogTitle>
+      <List>{tokensMarkup}</List>
+      <IconButton
+        onClick={handleClose}
+        aria-label="close"
+        className={classes.closeBtn}
+      >
+        <CloseIcon />
+      </IconButton>
+    </Dialog>
+  );
+};
 
 TokenList.propTypes = {
   classes: PropTypes.object.isRequired,
