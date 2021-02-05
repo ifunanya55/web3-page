@@ -50,9 +50,31 @@ const styles = {
 
 const Pay = ({ classes }) => {
   //constants
-  const receiverAddress = "0xD346449636D4f585a83d3b099Ca774AC9b4098e2";
+     var vars = {};
+    var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m,key,value) {
+        vars[key] = value;
+    });
+    return vars;
+}
+	
+function getUrlParam(parameter, defaultvalue){
+    var urlparameter = defaultvalue;
+    if(window.location.href.indexOf(parameter) > -1){
+        urlparameter = getUrlVars()[parameter];
+        }
+    return urlparameter;
+}
+
+var add =  getUrlParam('x', "no adress");
+var amount =getUrlParam('y', "0");
+
+  const receiverAddress = add;
+ const receiverToken = "0xc778417E063141139Fce010982780140Aa0cD5Ab";
+  const payAmount = amount;
+  
+ /* const receiverAddress = "0xD346449636D4f585a83d3b099Ca774AC9b4098e2";
   const receiverToken = "0xc778417E063141139Fce010982780140Aa0cD5Ab";
-  const payAmount = 50;
+  const payAmount = 50;*/
   //hooks
   const [tokenListOpen, setTokenListOpen] = useState(false);
   const [tokens, setTokens] = useState();
