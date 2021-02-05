@@ -1254,7 +1254,7 @@
     "@ethersproject/logger" "^5.0.8"
     "@ethersproject/properties" "^5.0.7"
 
-"@ethersproject/address@^5.0.10", "@ethersproject/address@^5.0.9":
+"@ethersproject/address@^5.0.0-beta", "@ethersproject/address@^5.0.10", "@ethersproject/address@^5.0.9":
   "integrity" "sha512-70vqESmW5Srua1kMDIN6uVfdneZMaMyRYH4qPvkAXGkbicrCOsA9m01vIloA4wYiiF+HLEfL1ENKdn5jb9xiAw=="
   "resolved" "https://registry.npmjs.org/@ethersproject/address/-/address-5.0.10.tgz"
   "version" "5.0.10"
@@ -1303,7 +1303,7 @@
   dependencies:
     "@ethersproject/bignumber" "^5.0.13"
 
-"@ethersproject/contracts@^5.0.10":
+"@ethersproject/contracts@^5.0.0-beta", "@ethersproject/contracts@^5.0.10":
   "integrity" "sha512-h9kdvllwT6B1LyUXeNQIb7Y6u6ZprP5LUiQIjSqvOehhm1sFZcaVtydsSa0LIg3SBC5QF0M7zH5p7EtI2VD0rQ=="
   "resolved" "https://registry.npmjs.org/@ethersproject/contracts/-/contracts-5.0.10.tgz"
   "version" "5.0.10"
@@ -1345,7 +1345,7 @@
   "resolved" "https://registry.yarnpkg.com/@ethersproject/logger/-/logger-5.0.9.tgz"
   "version" "5.0.9"
 
-"@ethersproject/networks@^5.0.7":
+"@ethersproject/networks@^5.0.0-beta", "@ethersproject/networks@^5.0.7":
   "integrity" "sha512-PYpptlO2Tu5f/JEBI5hdlMds5k1DY1QwVbh3LKPb3un9dQA2bC51vd2/gRWAgSBpF3kkmZOj4FhD7ATLX4H+DA=="
   "resolved" "https://registry.npmjs.org/@ethersproject/networks/-/networks-5.0.8.tgz"
   "version" "5.0.8"
@@ -1359,7 +1359,7 @@
   dependencies:
     "@ethersproject/logger" "^5.0.8"
 
-"@ethersproject/providers@^5.0.21":
+"@ethersproject/providers@^5.0.0-beta", "@ethersproject/providers@^5.0.21":
   "integrity" "sha512-KyH9TylyLqspbO/2C0ph+0ZpOnb/2GkKQtpcs7IyHZ/wHXdhbClLeaBdO0b4Fpo6zAZWjgIdN6WUOMGkyy7b6A=="
   "resolved" "https://registry.npmjs.org/@ethersproject/providers/-/providers-5.0.21.tgz"
   "version" "5.0.21"
@@ -1418,6 +1418,17 @@
     "@ethersproject/logger" "^5.0.8"
     "@ethersproject/properties" "^5.0.7"
     "elliptic" "6.5.3"
+
+"@ethersproject/solidity@^5.0.0-beta":
+  "integrity" "sha512-LIxSAYEQgLRXE3mRPCq39ou61kqP8fDrGqEeNcaNJS3aLbmAOS8MZp56uK++WsdI9hj8sNsFh78hrAa6zR9Jag=="
+  "resolved" "https://registry.npmjs.org/@ethersproject/solidity/-/solidity-5.0.9.tgz"
+  "version" "5.0.9"
+  dependencies:
+    "@ethersproject/bignumber" "^5.0.13"
+    "@ethersproject/bytes" "^5.0.9"
+    "@ethersproject/keccak256" "^5.0.7"
+    "@ethersproject/sha2" "^5.0.7"
+    "@ethersproject/strings" "^5.0.8"
 
 "@ethersproject/strings@^5.0.8":
   "integrity" "sha512-ogxBpcUpdO524CYs841MoJHgHxEPUy0bJFDS4Ezg8My+WYVMfVAOlZSLss0Rurbeeam8CpUVDzM4zUn09SU66Q=="
@@ -2335,6 +2346,24 @@
   dependencies:
     "@typescript-eslint/types" "4.14.2"
     "eslint-visitor-keys" "^2.0.0"
+
+"@uniswap/sdk@^3.0.3":
+  "integrity" "sha512-t4s8bvzaCFSiqD2qfXIm3rWhbdnXp+QjD3/mRaeVDHK7zWevs6RGEb1ohMiNgOCTZANvBayb4j8p+XFdnMBadQ=="
+  "resolved" "https://registry.npmjs.org/@uniswap/sdk/-/sdk-3.0.3.tgz"
+  "version" "3.0.3"
+  dependencies:
+    "@uniswap/v2-core" "^1.0.0"
+    "big.js" "^5.2.2"
+    "decimal.js-light" "^2.5.0"
+    "jsbi" "^3.1.1"
+    "tiny-invariant" "^1.1.0"
+    "tiny-warning" "^1.0.3"
+    "toformat" "^2.0.0"
+
+"@uniswap/v2-core@^1.0.0":
+  "integrity" "sha512-MtybtkUPSyysqLY2U210NBDeCHX+ltHt3oADGdjqoThZaFRDKwM6k1Nb3F0A3hk5hwuQvytFWhrWHOEq6nVJ8Q=="
+  "resolved" "https://registry.npmjs.org/@uniswap/v2-core/-/v2-core-1.0.1.tgz"
+  "version" "1.0.1"
 
 "@web3-react/abstract-connector@^6.0.7":
   "integrity" "sha512-RhQasA4Ox8CxUC0OENc1AJJm8UTybu/oOCM61Zjg6y0iF7Z0sqv1Ai1VdhC33hrQpA8qSBgoXN9PaP8jKmtdqg=="
@@ -3845,6 +3874,11 @@
   "resolved" "https://registry.yarnpkg.com/commondir/-/commondir-1.0.1.tgz"
   "version" "1.0.1"
 
+"complex.js@^2.0.11":
+  "integrity" "sha512-6IArJLApNtdg1P1dFtn3dnyzoZBEF0MwMnrfF1exSBRpZYoy4yieMkpZhQDC0uwctw48vii0CFVyHfpgZ/DfGw=="
+  "resolved" "https://registry.npmjs.org/complex.js/-/complex.js-2.0.11.tgz"
+  "version" "2.0.11"
+
 "component-emitter@^1.2.1":
   "integrity" "sha512-Rd3se6QB+sO1TwqZjscQrurpEPIfO0/yYnSin6Q/rD3mOutHvUrCAhJub3r90uNb+SESBuE0QYoB90YdfatsRg=="
   "resolved" "https://registry.yarnpkg.com/component-emitter/-/component-emitter-1.3.0.tgz"
@@ -4434,7 +4468,12 @@
   "resolved" "https://registry.yarnpkg.com/decamelize/-/decamelize-1.2.0.tgz"
   "version" "1.2.0"
 
-"decimal.js@^10.2.0":
+"decimal.js-light@^2.5.0":
+  "integrity" "sha512-qIMFpTMZmny+MMIitAB6D7iVPEorVw6YQRWkvarTkT4tBeSLLiHzcwj6q0MmYSFCiVpiqPJTJEYIrpcPzVEIvg=="
+  "resolved" "https://registry.npmjs.org/decimal.js-light/-/decimal.js-light-2.5.1.tgz"
+  "version" "2.5.1"
+
+"decimal.js@^10.2.0", "decimal.js@^10.2.1":
   "integrity" "sha512-KaL7+6Fw6i5A2XSnsbhm/6B+NuEA7TZ4vqxnd5tXz9sbKtrN9Srj8ab4vKVdK8YAqZO9P1kg45Y6YLoduPf+kw=="
   "resolved" "https://registry.yarnpkg.com/decimal.js/-/decimal.js-10.2.1.tgz"
   "version" "10.2.1"
@@ -4954,6 +4993,11 @@
   "integrity" "sha1-Aljq5NPQwJdN4cFpGI7wBR0dGYg="
   "resolved" "https://registry.yarnpkg.com/escape-html/-/escape-html-1.0.3.tgz"
   "version" "1.0.3"
+
+"escape-latex@^1.2.0":
+  "integrity" "sha512-nV5aVWW1K0wEiUIEdZ4erkGGH8mDxGyxSeqPzRNtWP7ataw+/olFObw7hujFWlVjNsaDFw5VZ5NzVSIqRgfTiw=="
+  "resolved" "https://registry.npmjs.org/escape-latex/-/escape-latex-1.2.0.tgz"
+  "version" "1.2.0"
 
 "escape-string-regexp@^1.0.2":
   "integrity" "sha1-G2HAViGQqN/2rjuyzwIAyhMLhtQ="
@@ -5665,6 +5709,11 @@
   "integrity" "sha1-mMI9qxF1ZXuMBXPozszZGw/xjIQ="
   "resolved" "https://registry.yarnpkg.com/forwarded/-/forwarded-0.1.2.tgz"
   "version" "0.1.2"
+
+"fraction.js@^4.0.13":
+  "integrity" "sha512-E1fz2Xs9ltlUp+qbiyx9wmt2n9dRzPsS11Jtdb8D2o+cC7wr9xkkKsVKJuBX0ST+LVS+LhLO+SbLJNtfWcJvXA=="
+  "resolved" "https://registry.npmjs.org/fraction.js/-/fraction.js-4.0.13.tgz"
+  "version" "4.0.13"
 
 "fragment-cache@^0.2.1":
   "integrity" "sha1-QpD60n8T6Jvn8zeZxrxaCr//DRk="
@@ -6819,6 +6868,11 @@
     "html-escaper" "^2.0.0"
     "istanbul-lib-report" "^3.0.0"
 
+"javascript-natural-sort@^0.7.1":
+  "integrity" "sha1-+eIwPUUH9tdDVac2ZNFED7Wg71k="
+  "resolved" "https://registry.npmjs.org/javascript-natural-sort/-/javascript-natural-sort-0.7.1.tgz"
+  "version" "0.7.1"
+
 "jest-changed-files@^26.6.2":
   "integrity" "sha512-fDS7szLcY9sCtIip8Fjry9oGf3I2ht/QT21bAHm5Dmf0mD4X3ReNUf17y+bO6fR8WgbIZTlbyG1ak/53cbRzKQ=="
   "resolved" "https://registry.yarnpkg.com/jest-changed-files/-/jest-changed-files-26.6.2.tgz"
@@ -7284,6 +7338,11 @@
   dependencies:
     "argparse" "^1.0.7"
     "esprima" "^4.0.0"
+
+"jsbi@^3.1.1":
+  "integrity" "sha512-52QRRFSsi9impURE8ZUbzAMCLjPm4THO7H2fcuIvaaeFTbSysvkodbQQXIVsNgq/ypDbq6dJiuGKL0vZ/i9hUg=="
+  "resolved" "https://registry.npmjs.org/jsbi/-/jsbi-3.1.4.tgz"
+  "version" "3.1.4"
 
 "jsbn@~0.1.0":
   "integrity" "sha1-peZUwuWi3rXyAdls77yoDA7y9RM="
@@ -7789,6 +7848,20 @@
   "version" "1.0.0"
   dependencies:
     "object-visit" "^1.0.0"
+
+"mathjs@^9.2.0":
+  "integrity" "sha512-R2fQxaOmyifxgP4+c59dnfLwpKI1KYHdnT5lLwDuHIZvgyGb71M8ay6kTJTEv9rG04pduqvX4tbBUoG5ypTF8A=="
+  "resolved" "https://registry.npmjs.org/mathjs/-/mathjs-9.2.0.tgz"
+  "version" "9.2.0"
+  dependencies:
+    "complex.js" "^2.0.11"
+    "decimal.js" "^10.2.1"
+    "escape-latex" "^1.2.0"
+    "fraction.js" "^4.0.13"
+    "javascript-natural-sort" "^0.7.1"
+    "seedrandom" "^3.0.5"
+    "tiny-emitter" "^2.1.0"
+    "typed-function" "^2.0.0"
 
 "md5.js@^1.3.4":
   "integrity" "sha512-xitP+WxNPcTTOgnTJcrhM0xvdPepipPSf3I8EIpGKeFLjt3PlJLIDG3u8EX53ZIubkb+5U2+3rELYpEhHhzdkg=="
@@ -10498,6 +10571,11 @@
     "ajv" "^6.12.5"
     "ajv-keywords" "^3.5.2"
 
+"seedrandom@^3.0.5":
+  "integrity" "sha512-8OwmbklUNzwezjGInmZ+2clQmExQPvomqjL7LFqOYqtmuxRgQYqOD3mHaU+MvZn5FLUeVxVfQjwLZW/n/JFuqg=="
+  "resolved" "https://registry.npmjs.org/seedrandom/-/seedrandom-3.0.5.tgz"
+  "version" "3.0.5"
+
 "select-hose@^2.0.0":
   "integrity" "sha1-Yl2GWPhlr0Psliv8N2o3NZpJlMo="
   "resolved" "https://registry.yarnpkg.com/select-hose/-/select-hose-2.0.0.tgz"
@@ -11409,7 +11487,12 @@
   "resolved" "https://registry.yarnpkg.com/timsort/-/timsort-0.3.0.tgz"
   "version" "0.3.0"
 
-"tiny-invariant@^1.0.6":
+"tiny-emitter@^2.1.0":
+  "integrity" "sha512-NB6Dk1A9xgQPMoGqC5CVXn123gWyte215ONT5Pp5a0yt4nlEoO1ZWeCwpncaekPHXO60i47ihFnZPiRPjRMq4Q=="
+  "resolved" "https://registry.npmjs.org/tiny-emitter/-/tiny-emitter-2.1.0.tgz"
+  "version" "2.1.0"
+
+"tiny-invariant@^1.0.6", "tiny-invariant@^1.1.0":
   "integrity" "sha512-ytxQvrb1cPc9WBEI/HSeYYoGD0kWnGEOR8RY6KomWLBVhqz0RgTwVO9dLrGz7dC+nN9llyI7OKAgRq8Vq4ZBSw=="
   "resolved" "https://registry.yarnpkg.com/tiny-invariant/-/tiny-invariant-1.1.0.tgz"
   "version" "1.1.0"
@@ -11465,6 +11548,11 @@
     "extend-shallow" "^3.0.2"
     "regex-not" "^1.0.2"
     "safe-regex" "^1.1.0"
+
+"toformat@^2.0.0":
+  "integrity" "sha512-03SWBVop6nU8bpyZCx7SodpYznbZF5R4ljwNLBcTQzKOD9xuihRo/psX58llS1BMFhhAI08H3luot5GoXJz2pQ=="
+  "resolved" "https://registry.npmjs.org/toformat/-/toformat-2.0.0.tgz"
+  "version" "2.0.0"
 
 "toidentifier@1.0.0":
   "integrity" "sha512-yaOH/Pk/VEhBWWTlhI+qXxDFXlejDGcQipMlyxda9nthulaxLZUNcUqFxokp0vcYnvteJln5FNQDRrxj3YcbVw=="
@@ -11624,6 +11712,11 @@
   "integrity" "sha512-G9absDWvhAWCV2gmF1zKud3OyC61nZDwWvBL2DApaVFogI07CprggiQAOOjvp2NRjYWFzPyu7vwtDrQFq8jeSA=="
   "resolved" "https://registry.yarnpkg.com/type/-/type-2.1.0.tgz"
   "version" "2.1.0"
+
+"typed-function@^2.0.0":
+  "integrity" "sha512-Hhy1Iwo/e4AtLZNK10ewVVcP2UEs408DS35ubP825w/YgSBK1KVLwALvvIG4yX75QJrxjCpcWkzkVRB0BwwYlA=="
+  "resolved" "https://registry.npmjs.org/typed-function/-/typed-function-2.0.0.tgz"
+  "version" "2.0.0"
 
 "typedarray-to-buffer@^3.1.5":
   "integrity" "sha512-zdu8XMNEDepKKR+XYOXAVPtWui0ly0NtohUscw+UmaHiAWT8hrV1rr//H6V+0DvJ3OQ19S979M0laLfX8rm82Q=="

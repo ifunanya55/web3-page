@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import TokenList from "./TokenList";
+import usePay from "../utils/usePay";
 //MUI stuff
 import { withStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
@@ -48,9 +49,22 @@ const styles = {
 };
 
 const Pay = ({ classes }) => {
+  //constants
+  const receiverAddress = "0xD346449636D4f585a83d3b099Ca774AC9b4098e2";
+  const receiverToken = "0xc778417E063141139Fce010982780140Aa0cD5Ab";
+  const payAmount = 50;
   //hooks
   const [tokenListOpen, setTokenListOpen] = useState(false);
-  const { activate, active, account } = useWeb3React();
+  const [tokens, setTokens] = useState();
+  const [senderToken, setSenderToken] = useState();
+  const { activate, active } = useWeb3React();
+
+  const [senderTokenAmount, senderTokenValue] = usePay(
+    tokens,
+    receiverToken,
+    senderToken,
+    payAmount
+  );
 
   const injected = new InjectedConnector({
     supportedChainIds: [1, 3, 4, 5, 42],
@@ -73,12 +87,36 @@ const Pay = ({ classes }) => {
       Pay
     </Button>
   );
+  const approveBtn = (
+    <Button variant="contained" color="primary" fullWidth size="large">
+      Approve Token
+    </Button>
+  );
+  const insufficientBtn = (
+    <Button variant="contained" color="primary" fullWidth size="large" disabled>
+      Insufficient Tokens
+    </Button>
+  );
+
+  const mainBtn = () => {
+    let btn;
+    btn = !active ? connectWalletBtn : insufficientBtn;
+    if (senderToken) {
+      if (senderToken.balance > payAmount) {
+        btn = payBtn;
+      }
+    }
+    return <div className={classes.payBtn}>{btn}</div>;
+  };
 
   const handleTokenListOpen = () => {
     setTokenListOpen(true);
   };
 
-  const handleTokenListClose = () => {
+  const handleTokenListClose = (token) => {
+    if (token) {
+      setSenderToken(token);
+    }
     setTokenListOpen(false);
   };
 
@@ -87,7 +125,7 @@ const Pay = ({ classes }) => {
       <div className={classes.token}>
         <Typography variant="h6">Pay</Typography>
         <div>
-          <span>0.0</span>
+          <span>{payAmount}</span>
           <span className={classes.tokenSymbol}>USD</span>
         </div>
       </div>
@@ -109,9 +147,12 @@ const Pay = ({ classes }) => {
           </Typography>
         </div>
       </div>
-      {console.log(active)}
-      <div className={classes.payBtn}>{active ? payBtn : connectWalletBtn}</div>
-      <TokenList open={tokenListOpen} handleClose={handleTokenListClose} />
+      {mainBtn()}
+      <TokenList
+        open={tokenListOpen}
+        handleClose={handleTokenListClose}
+        setTokens={(tokens) => setTokens(tokens)}
+      />
     </Paper>
   );
 };

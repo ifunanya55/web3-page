@@ -13,6 +13,7 @@ const initialTokens = [
     name1: "Ether",
     name2: "ethereum",
     symbol: "ETH",
+    address: "0xnull",
     logoURI: ethImage,
   },
   {
@@ -96,7 +97,5 @@ export default function useTokens() {
         setTokens(newTokens);
       });
   });
-
-  console.log(tokens);
   return tokens;
 }

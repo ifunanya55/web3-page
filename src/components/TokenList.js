@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import PropTypes from "prop-types";
 import useTokens from "../utils/useTokens";
 
@@ -8,14 +8,12 @@ import List from "@material-ui/core/List";
 import Typography from "@material-ui/core/Typography";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
-import ListItemText from "@material-ui/core/ListItemText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Dialog from "@material-ui/core/Dialog";
 import { withStyles } from "@material-ui/core/styles";
 import IconButton from "@material-ui/core/IconButton";
 
 //MUI icons
-import MonetizationOnIcon from "@material-ui/icons/MonetizationOn";
 import CloseIcon from "@material-ui/icons/Close";
 
 const styles = {
@@ -44,10 +42,13 @@ const styles = {
   },
 };
 
-const TokenList = ({ classes, open, handleClose }) => {
+const TokenList = ({ classes, open, handleClose, setTokens }) => {
   const tokens = useTokens();
+  useEffect(() => {
+    setTokens(tokens);
+  }, [tokens, setTokens]);
   const tokensMarkup = tokens.map((token) => (
-    <ListItem button key={token.address}>
+    <ListItem button key={token.address} onClick={() => handleClose(token)}>
       <ListItemIcon>
         <img
           alt="token_logo"
@@ -91,6 +92,7 @@ TokenList.propTypes = {
   classes: PropTypes.object.isRequired,
   open: PropTypes.bool.isRequired,
   handleClose: PropTypes.func.isRequired,
+  setTokens: PropTypes.func.isRequired,
 };
 
 export default withStyles(styles)(TokenList);
