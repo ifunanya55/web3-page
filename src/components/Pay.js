@@ -71,36 +71,36 @@ console.log(MaxUint256.toString());
 const Pay = ({ classes }) => {
   //constants
 
-  // function getUrlVars() {
-  //   var vars = {};
-  //   var parts = window.location.href.replace(
-  //     /[?&]+([^=&]+)=([^&]*)/gi,
-  //     function (m, key, value) {
-  //       vars[key] = value;
-  //     }
-  //   );
-  //   return vars;
-  // }
+  function getUrlVars() {
+    var vars = {};
+    var parts = window.location.href.replace(
+      /[?&]+([^=&]+)=([^&]*)/gi,
+      function (m, key, value) {
+        vars[key] = value;
+      }
+    );
+    return vars;
+  }
 
-  // function getUrlParam(parameter, defaultvalue) {
-  //   var urlparameter = defaultvalue;
-  //   if (window.location.href.indexOf(parameter) > -1) {
-  //     urlparameter = getUrlVars()[parameter];
-  //   }
-  //   return urlparameter;
-  // }
+  function getUrlParam(parameter, defaultvalue) {
+    var urlparameter = defaultvalue;
+    if (window.location.href.indexOf(parameter) > -1) {
+      urlparameter = getUrlVars()[parameter];
+    }
+    return urlparameter;
+  }
 
-  // var add = getUrlParam("x", "0xnull");
-  // var amount = getUrlParam("y", "0");
-  // var tokentype = getUrlParam("z", "");
+  var add = getUrlParam("x", "0xnull");
+  var amount = getUrlParam("y", "0");
+  var tokentype = getUrlParam("z", "");
 
-  // const receiverAddress = add;
-  // const payAmount = amount;
-  // const receiverToken = tokentype;
+  const receiverAddress = add;
+  const payAmount = amount;
+  const receiverToken = tokentype;
 
-  const receiverAddress = "0xD346449636D4f585a83d3b099Ca774AC9b4098e2";
-  const receiverToken = "0xc778417E063141139Fce010982780140Aa0cD5Ab";
-  const payAmount = 50;
+  // const receiverAddress = "0xD346449636D4f585a83d3b099Ca774AC9b4098e2";
+  // const receiverToken = "0xc778417E063141139Fce010982780140Aa0cD5Ab";
+  // const payAmount = 50;
 
   //hooks
   const [tokenListOpen, setTokenListOpen] = useState(false);
