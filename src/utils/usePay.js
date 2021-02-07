@@ -60,7 +60,7 @@ const getTrade = async (sendToken, receiveToken, amountIn) => {
     new TokenAmount(receiveToken, amountIn),
     TradeType.EXACT_OUTPUT
   );
-
+  console.log(trade.route.path);
   return trade;
 };
 
