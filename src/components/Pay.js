@@ -62,13 +62,15 @@ const quickzapAddress = "0x865676ec2685163dFD83cF26dF94E36221428730";
 
 const Pay = ({ classes }) => {
   //constants
-     var vars = {};
+   
+function getUrlVars() {
+    var vars = {};
     var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m,key,value) {
         vars[key] = value;
     });
     return vars;
 }
-	
+
 function getUrlParam(parameter, defaultvalue){
     var urlparameter = defaultvalue;
     if(window.location.href.indexOf(parameter) > -1){
