@@ -15,6 +15,7 @@ const initialTokens = [
     symbol: "ETH",
     address: "0xnull",
     logoURI: ethImage,
+    decimals: 18,
   },
   {
     name1: "Wrapped Ether",
@@ -51,11 +52,10 @@ const initialTokens = [
 export default function useTokens() {
   const { active, account, library } = useWeb3React();
   const [price, setPrice] = useState(false);
-  const [balance, setBalance] = useState(false);
   let [tokens, setTokens] = useState(initialTokens);
 
   useEffect(() => {
-    if (!active || balance) return;
+    if (!active) return;
     const tokenBalances = tokens.map((token) => {
       if (token.name1 === "Ether") {
         return fetcher(library, "getBalance", account);
@@ -63,19 +63,15 @@ export default function useTokens() {
       return fetcher(library, token.address, erc20.abi, "balanceOf", account);
     });
 
-    let newTokens;
+    let newTokens = [];
+
     Promise.all(tokenBalances).then((balances) => {
-      balances.forEach((balance) => {
-        newTokens = tokens.map((token) => ({
-          ...token,
-          balance: formatUnits(balance, 18),
-        }));
+      balances.forEach((balance, index) => {
+        newTokens.push({ ...tokens[index], balance: formatUnits(balance, 18) });
       });
       setTokens(newTokens);
     });
-
-    setBalance(true);
-  });
+  }, [active, library, account, tokens]);
 
   useEffect(() => {
     if (price) return;

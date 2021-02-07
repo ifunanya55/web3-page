@@ -1,5 +1,5 @@
 import React from "react";
-
+import quickzapLogo from "../images/quickzap1.png";
 //MUI stuff
 import { withStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
@@ -10,6 +10,9 @@ import { useWeb3React } from "@web3-react/core";
 import { InjectedConnector } from "@web3-react/injected-connector";
 
 const styles = {
+  logo: {
+    width: "9rem",
+  },
   header: {
     display: "flex",
     justifyContent: "space-between",
@@ -39,7 +42,7 @@ const Header = ({ classes }) => {
 
   return (
     <header className={classes.header}>
-      <h2>Logo</h2>
+      <img className={classes.logo} src={quickzapLogo} alt="logo" />
       {active ? (
         <Paper className={classes.account}>
           <Typography variant="body1">{`${account.slice(

@@ -1,6 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import TokenList from "./TokenList";
 import usePay from "../utils/usePay";
+import erc20 from "../utils/abis/@openzeppelin/contracts/token/ERC20/ERC20.sol/ERC20.json";
+import fetcher from "../utils/fetcher";
+import quickzap from "../utils/abis/contracts/Quickzap.sol/IQuickZap.json";
 //MUI stuff
 import { withStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
@@ -10,6 +13,12 @@ import Paper from "@material-ui/core/Paper";
 //Web3React Stuff
 import { useWeb3React } from "@web3-react/core";
 import { InjectedConnector } from "@web3-react/injected-connector";
+//Uniswap stuff
+import { WETH } from "@uniswap/sdk";
+//Ethersjs stuff
+import { formatUnits } from "@ethersproject/units";
+import { MaxUint256 } from "@ethersproject/constants";
+import { Contract } from "@ethersproject/contracts";
 
 const styles = {
   pay: {
@@ -31,9 +40,6 @@ const styles = {
       justifyContent: "space-between",
       display: "flex",
     },
-    "& span": {
-      fontSize: "20px",
-    },
   },
   tokenSymbol: {
     fontWeight: "500",
@@ -46,7 +52,13 @@ const styles = {
     right: 10,
     top: 3,
   },
+  selectToken: {
+    fontSize: 15,
+  },
 };
+
+//Deployed Quickzap
+const quickzapAddress = "0x865676ec2685163dFD83cF26dF94E36221428730";
 
 const Pay = ({ classes }) => {
   //constants
@@ -57,14 +69,55 @@ const Pay = ({ classes }) => {
   const [tokenListOpen, setTokenListOpen] = useState(false);
   const [tokens, setTokens] = useState();
   const [senderToken, setSenderToken] = useState();
-  const { activate, active } = useWeb3React();
+  const [senderTokenAmount, setSenderTokenAmount] = useState();
+  const [loading, setLoading] = useState(false);
+  const [senderTokenValue, setSenderTokenValue] = useState();
+  const { activate, active, account, library } = useWeb3React();
 
-  const [senderTokenAmount, senderTokenValue] = usePay(
+  let bestSenderToken = useRef(null);
+
+  let [tokenAmount, tokenValue, token] = usePay(
     tokens,
-    receiverToken,
+    tokens && tokens.find((token) => token.address === receiverToken),
     senderToken,
     payAmount
   );
+
+  useEffect(() => {
+    setSenderTokenAmount(tokenAmount);
+    setSenderTokenValue(tokenValue);
+    setSenderToken(token);
+  }, [tokenAmount, tokenValue, token]);
+
+  useEffect(() => {
+    if (!senderToken) return;
+    let contract;
+    contract = new Contract(
+      senderToken.address,
+      erc20.abi,
+      library.getSigner()
+    );
+    const myApproval = contract.filters.Approval(account, quickzapAddress);
+    library.on(myApproval, () => {
+      setLoading(false);
+    });
+    library.on(myApproval, () => {
+      setLoading(false);
+    });
+
+    contract = new Contract(quickzapAddress, quickzap.abi, library.getSigner());
+    const myPayment = contract.filters.Payment(account, receiverAddress);
+    library.on(myPayment, () => {
+      setLoading(false);
+    });
+
+    return () => {
+      library.removeAllListeners(myApproval);
+      library.removeAllListeners(myPayment);
+    };
+  });
+
+  //!senderToken && setSenderToken(bestSenderToken);
 
   const injected = new InjectedConnector({
     supportedChainIds: [1, 3, 4, 5, 42],
@@ -98,13 +151,48 @@ const Pay = ({ classes }) => {
     </Button>
   );
 
+  const pay = () => {};
+
+  const approveQuickzap = async () => {
+    fetcher(
+      library,
+      senderToken.address,
+      erc20.abi,
+      "approve",
+      quickzapAddress,
+      MaxUint256
+    );
+    setLoading(true);
+  };
+
+  const allowedQuickzap = async () => {
+    const allowed = await fetcher(
+      library,
+      senderToken.address,
+      erc20.abi,
+      "allowance",
+      account,
+      quickzapAddress
+    );
+    return await allowed;
+  };
+
   const mainBtn = () => {
     let btn;
     btn = !active ? connectWalletBtn : insufficientBtn;
     if (senderToken) {
-      if (senderToken.balance > payAmount) {
+      if (senderToken.balance * senderToken.price.usd > payAmount) {
         btn = payBtn;
       }
+      // if (senderToken.address !== "0xnull") {
+      //   const allowed = allowedQuickzap();
+      //   console.log(allowed);
+      //   allowed.then((res) => {
+      //     if (formatUnits(res, 18) === 0) {
+      //       btn = approveBtn;
+      //     }
+      //   });
+      // }
     }
     return <div className={classes.payBtn}>{btn}</div>;
   };
@@ -114,8 +202,9 @@ const Pay = ({ classes }) => {
   };
 
   const handleTokenListClose = (token) => {
-    if (token) {
+    if (token.address) {
       setSenderToken(token);
+      bestSenderToken.current = undefined;
     }
     setTokenListOpen(false);
   };
@@ -133,17 +222,24 @@ const Pay = ({ classes }) => {
       <div className={classes.token}>
         <Typography variant="h6">With</Typography>
         <div>
-          <span className={classes.input}>0.0</span>
+          <span className={classes.input}>{senderTokenAmount || "0.0"}</span>
           <Button
             variant="contained"
             color="primary"
             endIcon={<ExpandMore />}
             onClick={handleTokenListOpen}
+            className={classes.selectToken}
           >
-            ETH
+            {senderToken ? senderToken.symbol : "Select Token"}
           </Button>
           <Typography className={classes.usdEqv} variant="subtitle2">
-            USD 0.0 (inl. 1% slippage tolerance)
+            USD {senderTokenValue || "0.0"}{" "}
+            {!senderToken ||
+            senderToken.address !== receiverAddress ||
+            (senderToken.address !== "0xnull" && receiverAddress !== WETH[3]) ||
+            (senderToken.address !== WETH[3] && receiverAddress !== "0xnull")
+              ? "inl. 1% slippage tolerance"
+              : ""}
           </Typography>
         </div>
       </div>
@@ -151,7 +247,7 @@ const Pay = ({ classes }) => {
       <TokenList
         open={tokenListOpen}
         handleClose={handleTokenListClose}
-        setTokens={(tokens) => setTokens(tokens)}
+        setTokens={(_tokens) => !tokens && setTokens(_tokens)}
       />
     </Paper>
   );

@@ -3,7 +3,6 @@ import PropTypes from "prop-types";
 import useTokens from "../utils/useTokens";
 
 //MUI stuff
-import Button from "@material-ui/core/Button";
 import List from "@material-ui/core/List";
 import Typography from "@material-ui/core/Typography";
 import ListItem from "@material-ui/core/ListItem";
@@ -45,8 +44,11 @@ const styles = {
 const TokenList = ({ classes, open, handleClose, setTokens }) => {
   const tokens = useTokens();
   useEffect(() => {
-    setTokens(tokens);
+    if (tokens[0].balance && tokens[0].price) {
+      setTokens(tokens);
+    }
   }, [tokens, setTokens]);
+
   const tokensMarkup = tokens.map((token) => (
     <ListItem button key={token.address} onClick={() => handleClose(token)}>
       <ListItemIcon>
@@ -58,11 +60,14 @@ const TokenList = ({ classes, open, handleClose, setTokens }) => {
       </ListItemIcon>
       <div className={classes.listItemText}>
         <Typography variant="h6">
-          {token.symbol} {token.balance ? token.balance : ""}
+          {token.symbol}{" "}
+          {token.balance ? parseFloat(token.balance).toFixed(4) : ""}
         </Typography>
         <Typography variant="h6">
           ${" "}
-          {token.balance && token.price ? token.price.usd * token.balance : ""}
+          {token.balance && token.price
+            ? (token.price.usd * token.balance).toFixed(2)
+            : ""}
         </Typography>{" "}
       </div>
     </ListItem>
