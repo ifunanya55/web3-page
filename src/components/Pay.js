@@ -4,21 +4,25 @@ import usePay from "../utils/usePay";
 import erc20 from "../utils/abis/@openzeppelin/contracts/token/ERC20/ERC20.sol/ERC20.json";
 import fetcher from "../utils/fetcher";
 import quickzap from "../utils/abis/contracts/Quickzap.sol/IQuickZap.json";
+import { divide } from "mathjs";
 //MUI stuff
 import { withStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import ExpandMore from "@material-ui/icons/ExpandMore";
 import Paper from "@material-ui/core/Paper";
+import CircularProgress from "@material-ui/core/CircularProgress";
+import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 //Web3React Stuff
 import { useWeb3React } from "@web3-react/core";
 import { InjectedConnector } from "@web3-react/injected-connector";
 //Uniswap stuff
-import { WETH } from "@uniswap/sdk";
+import { WETH, ChainId } from "@uniswap/sdk";
 //Ethersjs stuff
-import { formatUnits } from "@ethersproject/units";
+import { formatUnits, parseUnits } from "@ethersproject/units";
 import { MaxUint256 } from "@ethersproject/constants";
 import { Contract } from "@ethersproject/contracts";
+import { AddressZero } from "@ethersproject/constants";
 
 const styles = {
   pay: {
@@ -55,44 +59,49 @@ const styles = {
   selectToken: {
     fontSize: 15,
   },
+  center: {
+    textAlign: "center",
+  },
 };
 
 //Deployed Quickzap
 const quickzapAddress = "0x865676ec2685163dFD83cF26dF94E36221428730";
+console.log(MaxUint256.toString());
 
 const Pay = ({ classes }) => {
   //constants
 
-  function getUrlVars() {
-    var vars = {};
-    var parts = window.location.href.replace(
-      /[?&]+([^=&]+)=([^&]*)/gi,
-      function (m, key, value) {
-        vars[key] = value;
-      }
-    );
-    return vars;
-  }
+  // function getUrlVars() {
+  //   var vars = {};
+  //   var parts = window.location.href.replace(
+  //     /[?&]+([^=&]+)=([^&]*)/gi,
+  //     function (m, key, value) {
+  //       vars[key] = value;
+  //     }
+  //   );
+  //   return vars;
+  // }
 
-  function getUrlParam(parameter, defaultvalue) {
-    var urlparameter = defaultvalue;
-    if (window.location.href.indexOf(parameter) > -1) {
-      urlparameter = getUrlVars()[parameter];
-    }
-    return urlparameter;
-  }
+  // function getUrlParam(parameter, defaultvalue) {
+  //   var urlparameter = defaultvalue;
+  //   if (window.location.href.indexOf(parameter) > -1) {
+  //     urlparameter = getUrlVars()[parameter];
+  //   }
+  //   return urlparameter;
+  // }
 
-  var add = getUrlParam("x", "0xnull");
-  var amount = getUrlParam("y", "0");
-  var tokentype = getUrlParam("z", "");
+  // var add = getUrlParam("x", "0xnull");
+  // var amount = getUrlParam("y", "0");
+  // var tokentype = getUrlParam("z", "");
 
-  const receiverAddress = add;
-  const payAmount = amount;
-  const receiverToken = tokentype;
+  // const receiverAddress = add;
+  // const payAmount = amount;
+  // const receiverToken = tokentype;
 
-  /* const receiverAddress = "0xD346449636D4f585a83d3b099Ca774AC9b4098e2";
+  const receiverAddress = "0xD346449636D4f585a83d3b099Ca774AC9b4098e2";
   const receiverToken = "0xc778417E063141139Fce010982780140Aa0cD5Ab";
-  const payAmount = 50;*/
+  const payAmount = 50;
+
   //hooks
   const [tokenListOpen, setTokenListOpen] = useState(false);
   const [tokens, setTokens] = useState();
@@ -100,11 +109,13 @@ const Pay = ({ classes }) => {
   const [senderTokenAmount, setSenderTokenAmount] = useState();
   const [loading, setLoading] = useState(false);
   const [senderTokenValue, setSenderTokenValue] = useState();
+  const [paid, setPaid] = useState(false);
+  const [path, setPath] = useState([]);
   const { activate, active, account, library } = useWeb3React();
 
   let bestSenderToken = useRef(null);
 
-  let [tokenAmount, tokenValue, token] = usePay(
+  let [tokenAmount, tokenValue, token, newPath] = usePay(
     tokens,
     tokens && tokens.find((token) => token.address === receiverToken),
     senderToken,
@@ -115,10 +126,11 @@ const Pay = ({ classes }) => {
     setSenderTokenAmount(tokenAmount);
     setSenderTokenValue(tokenValue);
     setSenderToken(token);
-  }, [tokenAmount, tokenValue, token]);
+    setPath(newPath);
+  }, [tokenAmount, tokenValue, token, newPath]);
 
   useEffect(() => {
-    if (!senderToken) return;
+    if (!senderToken || !senderToken.balance || !senderToken.price) return;
     let contract;
     contract = new Contract(
       senderToken.address,
@@ -136,6 +148,7 @@ const Pay = ({ classes }) => {
     contract = new Contract(quickzapAddress, quickzap.abi, library.getSigner());
     const myPayment = contract.filters.Payment(account, receiverAddress);
     library.on(myPayment, () => {
+      setPaid(true);
       setLoading(false);
     });
 
@@ -146,6 +159,44 @@ const Pay = ({ classes }) => {
   });
 
   //!senderToken && setSenderToken(bestSenderToken);
+
+  const pay = () => {
+    let path;
+    if (senderToken.address === receiverToken) {
+      path = [receiverToken === "0xnull" ? AddressZero : receiverToken];
+    } else if (
+      (senderToken.address === "0xnull" &&
+        receiverToken === WETH[ChainId.ROPSTEN].address) ||
+      (senderToken.address === WETH[ChainId.ROPSTEN].address &&
+        receiverToken === "0xnull")
+    ) {
+      path = [WETH[ChainId.ROPSTEN].address];
+    } else {
+      path = [senderToken.address, receiverToken];
+    }
+
+    const amountIn = parseUnits(senderTokenAmount.toString(), 18);
+    const amountOut = parseUnits(
+      divide(
+        payAmount,
+        tokens.find((token) => token.address === receiverToken).price.usd
+      ).toString(),
+      18
+    );
+    const deadline = Math.floor(Date.now() / 1000) + 20 * 60;
+    setLoading(true);
+    fetcher(
+      library,
+      quickzapAddress,
+      quickzap.abi,
+      "pay",
+      path,
+      amountIn,
+      amountOut,
+      receiverAddress,
+      deadline
+    );
+  };
 
   const injected = new InjectedConnector({
     supportedChainIds: [1, 3, 4, 5, 42],
@@ -164,7 +215,13 @@ const Pay = ({ classes }) => {
   );
 
   const payBtn = (
-    <Button variant="contained" color="primary" fullWidth size="large">
+    <Button
+      variant="contained"
+      color="primary"
+      fullWidth
+      size="large"
+      onClick={pay}
+    >
       Pay
     </Button>
   );
@@ -178,8 +235,6 @@ const Pay = ({ classes }) => {
       Insufficient Tokens
     </Button>
   );
-
-  const pay = () => {};
 
   const approveQuickzap = async () => {
     fetcher(
@@ -208,7 +263,7 @@ const Pay = ({ classes }) => {
   const mainBtn = () => {
     let btn;
     btn = !active ? connectWalletBtn : insufficientBtn;
-    if (senderToken) {
+    if (senderToken && senderToken.balance && senderToken.price) {
       if (senderToken.balance * senderToken.price.usd > payAmount) {
         btn = payBtn;
       }
@@ -271,7 +326,17 @@ const Pay = ({ classes }) => {
           </Typography>
         </div>
       </div>
-      {mainBtn()}
+      {loading ? (
+        <div className={classes.center}>
+          <CircularProgress color="primary" size={60} />
+        </div>
+      ) : paid ? (
+        <div className={classes.center}>
+          <CheckCircleIcon color="primary" fontSize="large" />
+        </div>
+      ) : (
+        mainBtn()
+      )}
       <TokenList
         open={tokenListOpen}
         handleClose={handleTokenListClose}

@@ -13,6 +13,8 @@ import {
   TradeType,
   Percent,
 } from "@uniswap/sdk";
+//Ethersjs stuff
+import { AddressZero } from "@ethersproject/constants";
 
 const getToken = (token) =>
   new Token(
@@ -27,7 +29,7 @@ const getToken = (token) =>
   );
 
 const getTrade = async (sendToken, receiveToken, amountIn) => {
-  //sending and receiving same toekn
+  //sending and receiving same token
   if (sendToken === receiveToken) return;
   //eth and weth
   if (sendToken.symbol === "WETH" && receiveToken.symbol === "ETH")
@@ -69,6 +71,7 @@ let trades, amountsIn, sendPrices;
 export default function usePay(tokens, receiveToken, sendToken, payAmount) {
   const [senderTokenAmount, setSenderTokenAmount] = useState(0);
   const [senderTokenValue, setSenderTokenValue] = useState(0);
+  const [path, setPath] = useState([]);
 
   const bestToken = useRef(null);
 
@@ -124,6 +127,16 @@ export default function usePay(tokens, receiveToken, sendToken, payAmount) {
         bestToken.current = tokens[index];
         setSenderTokenAmount(amountsIn[index]);
         setSenderTokenValue(sendPrices[index]);
+        // const newPath = () => {
+        //   if (!trades[index]) return [sendToken.address];
+        //   else if (trades[index] === "ETH") return [AddressZero];
+        //   else if (trades[index] === "WETH") return [WETH[ChainId.ROPSTEN]];
+        //   else {
+        //     console.log(trades[index]);
+        //     return trades[index].route.path.map((token) => token.address);
+        //   }
+        // };
+        // setPath(newPath);
       });
   }, [payAmount, sendToken, tokens, receiveToken]);
 
