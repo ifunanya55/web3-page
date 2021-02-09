@@ -13,8 +13,6 @@ import {
   TradeType,
   Percent,
 } from "@uniswap/sdk";
-//Ethersjs stuff
-import { AddressZero } from "@ethersproject/constants";
 
 const getToken = (token) =>
   new Token(
@@ -71,7 +69,6 @@ let trades, amountsIn, sendPrices;
 export default function usePay(tokens, receiveToken, sendToken, payAmount) {
   const [senderTokenAmount, setSenderTokenAmount] = useState(0);
   const [senderTokenValue, setSenderTokenValue] = useState(0);
-  const [path, setPath] = useState([]);
 
   const bestToken = useRef(null);
 
